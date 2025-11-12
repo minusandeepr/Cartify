@@ -18,7 +18,6 @@ import AdminPanel from './pages/AdminPanel.jsx';
 import Register from './pages/auth/Register.jsx';
 import Login from './pages/auth/Login.jsx';
 
-import './index.css';
 
 // initialize auth state from localStorage (once, before render)
 const initialToken = localStorage.getItem('token');
