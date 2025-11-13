@@ -1,93 +1,63 @@
 // src/pages/auth/Register.jsx
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import API from '../../api/axios'; // <-- fixed path (two levels up)
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import API from "../../api/axios";
+import Button from "../../components/ui/Button";
 
 export default function Register() {
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
-  const navigate = useNavigate();
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setForm((s) => ({ ...s, [e.target.name]: e.target.value }));
-  };
+  function update(e) { setForm((s) => ({ ...s, [e.target.name]: e.target.value })); }
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
-    setError('');
     try {
-      await API.post('/auth/register', form);
-      navigate('/auth/login');
+      const res = await API.post("/auth/register", form);
+      // on success, navigate to welcome or login
+      navigate("/auth/welcome");
     } catch (err) {
-      setError(err?.response?.data?.message || 'Something went wrong!');
-      console.error('Register error:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+      console.error("Register error", err);
+      alert(err?.response?.data?.message || "Register failed");
+    } finally { setLoading(false); }
+  }
 
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-    <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-      <h2 className="text-2xl font-bold text-center mb-6">Create an Account</h2>
+    <div className="min-h-[72vh] flex items-center justify-center py-12">
+      <div className="w-full max-w-md bg-white rounded-lg shadow p-6">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-1">Create an account</h2>
+        <p className="text-sm text-gray-500 mb-6">Start shopping on Cartify — it’s fast and free.</p>
 
-      {error && <p className="text-red-600 text-sm mb-3 text-center">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm text-gray-700 mb-1">Username</label>
+            <input name="username" value={form.username} onChange={update} required
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+          </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-1 font-medium">Username</label>
-          <input
-            type="text"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            required
-          />
+          <div>
+            <label className="block text-sm text-gray-700 mb-1">Email</label>
+            <input name="email" type="email" value={form.email} onChange={update} required
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+          </div>
+
+          <div>
+            <label className="block text-sm text-gray-700 mb-1">Password</label>
+            <input name="password" type="password" value={form.password} onChange={update} required
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+          </div>
+
+          <div className="pt-2">
+            <Button type="submit" disabled={loading} className="w-full">{loading ? "Creating..." : "Create account"}</Button>
+          </div>
+        </form>
+
+        <div className="mt-4 text-center text-sm text-gray-600">
+          Already have an account? <Link to="/auth/login" className="text-indigo-600">Sign in</Link>
         </div>
-
-        <div>
-          <label className="block mb-1 font-medium">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-medium">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full border px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-300"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition disabled:opacity-50"
-        >
-          {loading ? 'Creating account...' : 'Register'}
-        </button>
-      </form>
-
-      <p className="text-center text-sm mt-4">
-        Already have an account?{' '}
-        <Link to="/auth/login" className="text-indigo-600 font-medium hover:underline">
-          Login
-        </Link>
-      </p>
+      </div>
     </div>
-  </div>
-);
+  );
 }

@@ -1,12 +1,15 @@
-export default function Button({ children, variant = 'solid', className = '', ...props }) {
-  const base = 'inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2';
+// src/components/ui/Button.jsx
+import React from "react";
+
+export default function Button({ children, variant = "primary", className = "", ...props }) {
+  const base = "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium shadow-sm focus:outline-none";
   const variants = {
-    solid: 'bg-brand-500 text-white hover:bg-brand-600 focus:ring-brand-300',
-    ghost: 'bg-transparent text-brand-600 hover:bg-brand-50',
-    outline: 'border border-gray-200 text-gray-700 hover:bg-gray-50',
+    primary: "bg-indigo-600 text-white hover:bg-indigo-700",
+    ghost: "bg-transparent text-indigo-600 hover:bg-indigo-50",
+    danger: "bg-red-600 text-white hover:bg-red-700"
   };
   return (
-    <button className={`${base} ${variants[variant] || variants.solid} ${className}`} {...props}>
+    <button className={`${base} ${variants[variant] || variants.primary} ${className}`} {...props}>
       {children}
     </button>
   );

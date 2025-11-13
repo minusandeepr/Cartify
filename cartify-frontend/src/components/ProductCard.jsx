@@ -1,25 +1,27 @@
-import Button from './ui/Button';
-import Card from './ui/Card';
+// src/components/ProductCard.jsx
+import React from "react";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
   return (
-    <Card className="flex flex-col">
-      <div className="relative pb-72 overflow-hidden rounded-lg">
-        <img src={product.images?.[0] || '/placeholder.png'} alt={product.name} className="absolute inset-0 w-full h-full object-cover" />
-      </div>
-
-      <div className="mt-4 flex-1">
-        <h3 className="font-semibold text-gray-900">{product.name}</h3>
-        <p className="text-sm text-gray-500 mt-1 line-clamp-2">{product.description}</p>
-      </div>
-
-      <div className="mt-4 flex items-center justify-between">
-        <div>
-          <div className="text-lg font-bold text-gray-900">₹{product.price}</div>
-          <div className="text-xs text-muted">Stock: {product.stock}</div>
+    <article className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+      <Link to={`/products/${product._id}`} className="block">
+        <div className="h-44 bg-gray-50 flex items-center justify-center">
+          {/* placeholder image area */}
+          <img src={product.images?.[0] || '/placeholder.png'} alt={product.name} className="object-contain h-36" />
         </div>
-        <Button variant="outline">Add</Button>
-      </div>
-    </Card>
+
+        <div className="p-4">
+          <h3 className="text-md font-semibold text-gray-800 truncate">{product.name}</h3>
+          <p className="text-sm text-gray-500 mt-1 overflow-hidden max-h-12">{product.description}</p>
+
+
+          <div className="mt-3 flex items-center justify-between">
+            <div className="text-lg font-semibold text-gray-900">₹{product.price}</div>
+            <div className="text-sm text-gray-500">{product.stock > 0 ? `${product.stock} left` : 'Out of stock'}</div>
+          </div>
+        </div>
+      </Link>
+    </article>
   );
 }
